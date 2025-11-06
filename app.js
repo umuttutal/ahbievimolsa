@@ -1,5 +1,4 @@
-const { useState } = React;
-const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
+const { useState, useEffect, useRef } = React;
 
 const EvYatirimAnalizi = () => {
   // Kullanıcı değiştirilebilir parametreler
@@ -134,6 +133,79 @@ const EvYatirimAnalizi = () => {
   const yapracikDegerArtisi = vars.yapracikDeger2027 - vars.yapracikDeger2026;
   const yapracikArtisYuzdesi = ((yapracikDegerArtisi / vars.yapracikDeger2026) * 100).toFixed(0);
 
+  // ApexCharts referansı
+  const chartRef = useRef(null);
+  const chartInstance = useRef(null);
+
+  useEffect(() => {
+    if (chartRef.current && typeof ApexCharts !== 'undefined') {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+
+      const options = {
+        series: [{
+          name: "2026'da Al",
+          data: karsilastirmaData.map(d => d.senaryo1)
+        }, {
+          name: "2027'de Al",
+          data: karsilastirmaData.map(d => d.senaryo2)
+        }],
+        chart: {
+          height: 400,
+          type: 'line',
+          toolbar: { show: false }
+        },
+        colors: ['#10b981', '#8b5cf6'],
+        dataLabels: { enabled: false },
+        stroke: {
+          curve: 'smooth',
+          width: 3
+        },
+        xaxis: {
+          categories: karsilastirmaData.map(d => d.yil),
+          title: { text: 'Yıl' }
+        },
+        yaxis: {
+          title: { text: 'Kümülatif Maliyet (₺)' },
+          labels: {
+            formatter: function (value) {
+              return (value / 1000000).toFixed(1) + 'M ₺';
+            }
+          }
+        },
+        tooltip: {
+          y: {
+            formatter: function (value) {
+              return value.toLocaleString('tr-TR') + ' ₺';
+            }
+          }
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.3,
+            opacityTo: 0.05,
+            stops: [0, 100]
+          }
+        },
+        legend: {
+          position: 'top'
+        }
+      };
+
+      chartInstance.current = new ApexCharts(chartRef.current, options);
+      chartInstance.current.render();
+    }
+
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+    };
+  }, [yuzYilArtisOrani, yapracikArtisOrani, yapracikKira2027, faiz2027, vade, ekstraPara, firsatMaliyet]);
+
   return (
     <div className="w-full max-w-7xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
@@ -227,54 +299,7 @@ const EvYatirimAnalizi = () => {
             Her bir eğrinin altındaki alan, o senaryonun 5 yıllık toplam maliyetini gösterir
           </p>
         </div>
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={karsilastirmaData}>
-            <defs>
-              <linearGradient id="colorSenaryo1" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0.05}/>
-              </linearGradient>
-              <linearGradient id="colorSenaryo2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.05}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="yil" 
-              label={{ value: 'Yıl', position: 'insideBottom', offset: -5 }}
-            />
-            <YAxis 
-              tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`}
-              label={{ value: 'Kümülatif Maliyet (₺)', angle: -90, position: 'insideLeft' }}
-            />
-            <Tooltip 
-              formatter={(value) => `${value.toLocaleString('tr-TR')} ₺`}
-              labelFormatter={(label) => `Yıl: ${label}`}
-            />
-            <Legend />
-            <Line 
-              type="monotone" 
-              dataKey="senaryo1" 
-              stroke="#10b981" 
-              strokeWidth={3}
-              name="2026'da Al"
-              dot={{ fill: '#10b981', r: 4 }}
-              fill="url(#colorSenaryo1)"
-              fillOpacity={1}
-            />
-            <Line 
-              type="monotone" 
-              dataKey="senaryo2" 
-              stroke="#8b5cf6" 
-              strokeWidth={3}
-              name="2027'de Al"
-              dot={{ fill: '#8b5cf6', r: 4 }}
-              fill="url(#colorSenaryo2)"
-              fillOpacity={1}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        <div ref={chartRef} style={{ width: '100%', height: '400px' }}></div>
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
             <div className="w-12 h-12 bg-green-500 rounded flex items-center justify-center text-white font-bold">∫</div>
