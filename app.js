@@ -125,7 +125,9 @@ const EvYatirimAnalizi = () => {
   const karsilastirmaData = senaryo1NakitAkisi.map((item, index) => ({
     ay: item.ay,
     yil: item.yil,
-    senaryo1: item.kumulatif,
+    senaryo1Aylik: item.aylik,  // Aylık maliyet - grafik için
+    senaryo2Aylik: senaryo2NakitAkisi[index].aylik,
+    senaryo1: item.kumulatif,  // Kümülatif - tablo için
     senaryo2: senaryo2NakitAkisi[index].kumulatif
   }));
 
@@ -145,53 +147,55 @@ const EvYatirimAnalizi = () => {
 
       const options = {
         series: [{
-          name: "2026'da Al",
-          data: karsilastirmaData.map(d => d.senaryo1)
+          name: "2026'da Al - Aylık Maliyet",
+          data: karsilastirmaData.map(d => d.senaryo1Aylik)
         }, {
-          name: "2027'de Al",
-          data: karsilastirmaData.map(d => d.senaryo2)
+          name: "2027'de Al - Aylık Maliyet",
+          data: karsilastirmaData.map(d => d.senaryo2Aylik)
         }],
         chart: {
           height: 400,
-          type: 'line',
-          toolbar: { show: false }
+          type: 'area',
+          toolbar: { show: false },
+          stacked: false
         },
         colors: ['#10b981', '#8b5cf6'],
         dataLabels: { enabled: false },
         stroke: {
-          curve: 'smooth',
-          width: 3
+          curve: 'straight',  // Lineer interpolasyon
+          width: 2
+        },
+        markers: {
+          size: 4,
+          hover: { size: 6 }
         },
         xaxis: {
           categories: karsilastirmaData.map(d => d.yil),
-          title: { text: 'Yıl' }
+          title: { text: 'Zaman (Yıl)' }
         },
         yaxis: {
-          title: { text: 'Kümülatif Maliyet (₺)' },
+          title: { text: 'Aylık Maliyet (₺)' },
           labels: {
             formatter: function (value) {
-              return (value / 1000000).toFixed(1) + 'M ₺';
+              return (value / 1000).toFixed(0) + 'K ₺';
             }
           }
         },
         tooltip: {
+          shared: false,
           y: {
             formatter: function (value) {
-              return value.toLocaleString('tr-TR') + ' ₺';
+              return value.toLocaleString('tr-TR') + ' ₺/ay';
             }
           }
         },
         fill: {
-          type: 'gradient',
-          gradient: {
-            shadeIntensity: 1,
-            opacityFrom: 0.3,
-            opacityTo: 0.05,
-            stops: [0, 100]
-          }
+          type: 'solid',
+          opacity: 0.3
         },
         legend: {
-          position: 'top'
+          position: 'top',
+          horizontalAlign: 'center'
         }
       };
 
@@ -284,15 +288,15 @@ const EvYatirimAnalizi = () => {
         </div>
       </div>
 
-      {/* Kümülatif Maliyet Grafiği */}
+      {/* Aylık Maliyet Grafiği */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-2">Kümülatif Maliyet Karşılaştırması ({vadeYil} Yıl)</h3>
+        <h3 className="text-xl font-bold text-gray-800 mb-2">Aylık Maliyet Karşılaştırması ({vadeYil} Yıl)</h3>
         <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
           <p className="text-sm text-gray-700">
-            <strong>Toplam Maliyet = Eğri Altında Kalan Alan (∫)</strong>
+            <strong>Toplam Maliyet = Alan Altındaki Toplam (∫ Aylık Maliyet dt)</strong>
           </p>
           <p className="text-xs text-gray-600 mt-1">
-            Her bir eğrinin altındaki alan, o senaryonun {vadeYil} yıllık toplam maliyetini gösterir
+            Grafik her noktada aylık maliyeti gösterir. Alan = Toplam {vadeYil} yıllık maliyet
           </p>
         </div>
         <div ref={chartRef} style={{ width: '100%', height: '400px' }}></div>
