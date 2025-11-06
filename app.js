@@ -138,7 +138,7 @@ const EvYatirimAnalizi = () => {
     <div className="w-full max-w-7xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
-          <Home className="text-blue-600" />
+          <span className="text-4xl">🏠</span>
           Ev Yatırım Fizibilite Analizi
         </h1>
         <p className="text-gray-600">Yapracık → 100.Yıl Ev Değişimi Karşılaştırması</p>
@@ -156,7 +156,7 @@ const EvYatirimAnalizi = () => {
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold">Senaryo 1: 2026 Ocak'ta Al</h3>
-            <Calendar className="w-8 h-8 opacity-80" />
+            <span className="text-3xl opacity-80">📅</span>
           </div>
           <div className="space-y-3">
             <div>
@@ -185,7 +185,7 @@ const EvYatirimAnalizi = () => {
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold">Senaryo 2: 2027 Ocak'ta Al</h3>
-            <Calendar className="w-8 h-8 opacity-80" />
+            <span className="text-3xl opacity-80">📅</span>
           </div>
           <div className="space-y-3">
             <div>
@@ -347,7 +347,7 @@ const EvYatirimAnalizi = () => {
       {/* Karar Kartı */}
       <div className={`rounded-xl shadow-lg p-6 mb-6 ${senaryo1Toplam < senaryo2Toplam ? 'bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-500' : 'bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-500'}`}>
         <div className="flex items-center gap-3 mb-4">
-          <TrendingUp className={`w-8 h-8 ${senaryo1Toplam < senaryo2Toplam ? 'text-green-600' : 'text-purple-600'}`} />
+          <span className="text-4xl">{senaryo1Toplam < senaryo2Toplam ? '📈' : '📊'}</span>
           <h3 className="text-2xl font-bold text-gray-800">Öneri</h3>
         </div>
         <p className="text-lg text-gray-700 mb-4">
@@ -380,7 +380,7 @@ const EvYatirimAnalizi = () => {
       {/* Kullanıcı Input Formu */}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <DollarSign className="text-blue-600" />
+          <span className="text-3xl">💰</span>
           Kendi Rakamlarınızla Deneyin
         </h3>
         <p className="text-gray-600 mb-6 text-sm">
