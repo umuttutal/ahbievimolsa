@@ -205,10 +205,6 @@ const EvYatirimAnalizi = () => {
               <p className="text-xl font-bold">{Math.round(vars.yapracikDeger2027).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-gray-600 text-sm">Peşinat olabilecek ekstra sermaye</p>
-              <p className="text-lg font-bold">{vars.ekstraPara.toLocaleString('tr-TR')} ₺</p>
-            </div>
-            <div>
               <p className="text-gray-600 text-sm">Peşinat olabilecek ekstra sermaye (Büyümüş)</p>
               <p className="text-lg font-bold">{Math.round(ekstraParaBuyumus).toLocaleString('tr-TR')} ₺</p>
             </div>
@@ -274,7 +270,7 @@ const EvYatirimAnalizi = () => {
             <li>• Fırsat maliyeti: Yıllık %{firsatMaliyet} getiri</li>
             <li>• Umut'un ortalama kirası: {umutKirasi.toLocaleString('tr-TR')} ₺/ay (2026-{senaryo2Yil})</li>
             <li>• Yapracık ortalama kira geliri: {yapracikKira2027.toLocaleString('tr-TR')} ₺/ay (2026-{senaryo2Yil})</li>
-            <li>• Tüm rakamlar nominal değerlerdir</li>
+            <li>• Peşinat olacak ekstra sermayenin (herhangi bir yıldaki fiyatlaması ile) tamamı, yine bu evin satın alımı için kullanılacaktır</li>
             <li>• Vergi, masraf ve emlak komisyonları dahil değildir</li>
           </ul>
         </div>
