@@ -36,7 +36,7 @@ const EvYatirimAnalizi = () => {
   const vars = {
     yapracikDeger2026: 2700000,
     yapracikDeger2027: yapracikDeger_Senaryo2,
-    yapracikKira: 11000,
+    yapracikKira: 12000,
     yuzYilDeger2026: 4300000,
     yuzYilDeger2027: yuzYilDeger_Senaryo2,
     suankiKira: umutKirasi,
