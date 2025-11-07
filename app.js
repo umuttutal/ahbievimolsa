@@ -205,10 +205,6 @@ const EvYatirimAnalizi = () => {
               <p className="text-xl font-bold">{Math.round(vars.yapracikDeger2027).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-gray-600 text-sm">Peşinat olabilecek ekstra sermaye</p>
-              <p className="text-lg font-bold">{vars.ekstraPara.toLocaleString('tr-TR')} ₺</p>
-            </div>
-            <div>
               <p className="text-gray-600 text-sm">Peşinat olabilecek ekstra sermaye (Büyümüş)</p>
               <p className="text-lg font-bold">{Math.round(ekstraParaBuyumus).toLocaleString('tr-TR')} ₺</p>
             </div>
