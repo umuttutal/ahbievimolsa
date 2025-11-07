@@ -120,9 +120,14 @@ const EvYatirimAnalizi = () => {
   const senaryo1NBD = hesaplaNBD(senaryo1NakitAkisi);
   const senaryo2NBD = hesaplaNBD(senaryo2NakitAkisi);
 
-  // Toplam maliyet hesapları (5 yıl)
-  const senaryo1Toplam = senaryo1NakitAkisi[senaryo1NakitAkisi.length - 1].kumulatif;
-  const senaryo2Toplam = senaryo2NakitAkisi[senaryo2NakitAkisi.length - 1].kumulatif;
+  // Toplam maliyet hesapları
+  const senaryo1Toplam = 
+    (senaryo1_aylikTaksit * vade) + 
+    ((vars.yapracikKira2027 - vars.suankiKira) * yilFarki * 12);
+  
+  const senaryo2Toplam = 
+    ((vars.suankiKira - vars.yapracikKira2027) * yilFarki * 12) + 
+    (senaryo2_aylikTaksit * vade);
 
   // Karşılaştırma grafiği için veri
   const karsilastirmaData = senaryo1NakitAkisi.map((item, index) => ({
@@ -237,10 +242,9 @@ const EvYatirimAnalizi = () => {
               <li>• 100.Yıl evi al: -{vars.yuzYilDeger2026.toLocaleString('tr-TR')} ₺</li>
               <li>• Kredi: {senaryo1_krediTutar.toLocaleString('tr-TR')} ₺ (%2.7 faiz, {vade} ay)</li>
               <li>• Aylık taksit: {Math.round(senaryo1_aylikTaksit).toLocaleString('tr-TR')} ₺</li>
-              <li>• {umutKirasi.toLocaleString('tr-TR')} ₺ kira ödemesi derhal biter</li>
-              <li>• {yapracikKira2027.toLocaleString('tr-TR')} ₺ kira geliri biter</li>
-              <li>• Net aylık kazanç vs kira: {(umutKirasi - Math.round(senaryo1_aylikTaksit)).toLocaleString('tr-TR')} ₺</li>
-              <li>• <strong>{vadeYil} yıl toplam: {senaryo1Toplam.toLocaleString('tr-TR')} ₺</strong></li>
+              <li>• Taksit toplamı: {Math.round(senaryo1_aylikTaksit * vade).toLocaleString('tr-TR')} ₺</li>
+              <li>• Fırsat kaybı ({yilFarki} yıl): {((vars.yapracikKira2027 - vars.suankiKira) * yilFarki * 12).toLocaleString('tr-TR')} ₺</li>
+              <li>• <strong>Toplam maliyet: {Math.round(senaryo1Toplam).toLocaleString('tr-TR')} ₺</strong></li>
             </ul>
           </div>
 
@@ -256,7 +260,9 @@ const EvYatirimAnalizi = () => {
               <li>• Toplam peşinat: {(Math.round(vars.yapracikDeger2027 + ekstraParaBuyumus)).toLocaleString('tr-TR')} ₺</li>
               <li>• Kredi: {Math.round(senaryo2_krediTutar).toLocaleString('tr-TR')} ₺ (%{faiz2027} faiz, {vade} ay)</li>
               <li>• Aylık taksit: {Math.round(senaryo2_aylikTaksit).toLocaleString('tr-TR')} ₺</li>
-              <li>• <strong>{vadeYil} yıl toplam: {senaryo2Toplam.toLocaleString('tr-TR')} ₺</strong></li>
+              <li>• Taksit toplamı: {Math.round(senaryo2_aylikTaksit * vade).toLocaleString('tr-TR')} ₺</li>
+              <li>• Kira gideri ({yilFarki} yıl): {((vars.suankiKira - vars.yapracikKira2027) * yilFarki * 12).toLocaleString('tr-TR')} ₺</li>
+              <li>• <strong>Toplam maliyet: {Math.round(senaryo2Toplam).toLocaleString('tr-TR')} ₺</strong></li>
             </ul>
           </div>
         </div>
@@ -272,6 +278,23 @@ const EvYatirimAnalizi = () => {
             <li>• Tüm rakamlar nominal değerlerdir</li>
             <li>• Vergi, masraf ve emlak komisyonları dahil değildir</li>
           </ul>
+        </div>
+
+        <div className="mt-4 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+          <h4 className="font-bold text-gray-800 mb-2">Toplam Maliyet Hesaplama Mantığı:</h4>
+          <div className="text-gray-700 space-y-2 text-sm">
+            <p><strong>Senaryo 1 (2026'da al):</strong></p>
+            <p className="ml-4">Toplam Maliyet = (Aylık Taksit × Vade) + Fırsat Kaybı</p>
+            <p className="ml-4 text-xs">Fırsat Kaybı = (Yapracık Kirası - Umut Kirası) × {yilFarki} yıl × 12 ay</p>
+            <p className="ml-4 text-xs italic">= ({yapracikKira2027.toLocaleString('tr-TR')} - {umutKirasi.toLocaleString('tr-TR')}) × {yilFarki * 12} ay = {((vars.yapracikKira2027 - vars.suankiKira) * yilFarki * 12).toLocaleString('tr-TR')} ₺</p>
+            
+            <p className="mt-3"><strong>Senaryo 2 ({senaryo2Yil}'de al):</strong></p>
+            <p className="ml-4">Toplam Maliyet = Kira Gideri + (Aylık Taksit × Vade)</p>
+            <p className="ml-4 text-xs">Kira Gideri = (Umut Kirası - Yapracık Kirası) × {yilFarki} yıl × 12 ay</p>
+            <p className="ml-4 text-xs italic">= ({umutKirasi.toLocaleString('tr-TR')} - {yapracikKira2027.toLocaleString('tr-TR')}) × {yilFarki * 12} ay = {((vars.suankiKira - vars.yapracikKira2027) * yilFarki * 12).toLocaleString('tr-TR')} ₺</p>
+            
+            <p className="mt-3 text-xs text-gray-600"><strong>Not:</strong> Ekstra sermaye sadece kredi tutarını belirlemek için kullanılır, toplam maliyete direkt dahil değildir.</p>
+          </div>
         </div>
       </div>
 
