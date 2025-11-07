@@ -338,8 +338,6 @@ const EvYatirimAnalizi = () => {
             </p>
           </div>
         </div>
-
-        <h4 className="text-lg font-semibold text-gray-700 mb-4 mt-6">Diğer Parametreler</h4>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
