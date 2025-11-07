@@ -180,7 +180,7 @@ const EvYatirimAnalizi = () => {
               <p className="text-xl font-bold">{Math.round(senaryo1_aylikTaksit).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div className="border-t border-green-400 pt-3 mt-3">
-              <p className="text-green-100 text-sm">{vadeYil} Yıllık Toplam Maliyet</p>
+              <p className="text-green-100 text-sm">{vadeYil.toFixed(0)} Yıllık Toplam Maliyet</p>
               <p className="text-2xl font-bold">{senaryo1Toplam.toLocaleString('tr-TR')} ₺</p>
             </div>
           </div>
@@ -217,7 +217,7 @@ const EvYatirimAnalizi = () => {
               <p className="text-xl font-bold">{Math.round(senaryo2_aylikTaksit).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div className="border-t border-purple-400 pt-3 mt-3">
-              <p className="text-purple-100 text-sm">{vadeYil} Yıllık Toplam Maliyet</p>
+              <p className="text-purple-100 text-sm">{vadeYil.toFixed(0)} Yıllık Toplam Maliyet</p>
               <p className="text-2xl font-bold">{senaryo2Toplam.toLocaleString('tr-TR')} ₺</p>
             </div>
           </div>
