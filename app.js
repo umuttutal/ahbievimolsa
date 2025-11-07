@@ -270,7 +270,7 @@ const EvYatirimAnalizi = () => {
             <li>• Fırsat maliyeti: Yıllık %{firsatMaliyet} getiri</li>
             <li>• Umut'un ortalama kirası: {umutKirasi.toLocaleString('tr-TR')} ₺/ay (2026-{senaryo2Yil})</li>
             <li>• Yapracık ortalama kira geliri: {yapracikKira2027.toLocaleString('tr-TR')} ₺/ay (2026-{senaryo2Yil})</li>
-            <li>• Tüm rakamlar nominal değerlerdir</li>
+            <li>• Peşinat olacak ekstra sermayenin (herhangi bir yıldaki fiyatlaması ile) tamamı, yine bu evin satın alımı için kullanılacaktır</li>
             <li>• Vergi, masraf ve emlak komisyonları dahil değildir</li>
           </ul>
         </div>
