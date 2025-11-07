@@ -150,8 +150,7 @@ const EvYatirimAnalizi = () => {
     <div className="w-full max-w-7xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
-          <span className="text-4xl">🏠</span>
-          Ev Yatırım Fizibilite Analizi
+          Ah Bi Evim Olsa 🏠🤓
         </h1>
         <p className="text-gray-600">Bu hesap makinesi, yapracıktaki evin satışının şimdi (Senaryo 1) veya daha ileri bir yılda yapılmasının (Senaryo 2) toplam maliyet üzerinden karşılaştırılması için yapılmıştır.</p>
       </div>
