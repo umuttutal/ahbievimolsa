@@ -511,11 +511,20 @@ const EvYatirimAnalizi = () => {
             </label>
             <div className="flex items-center gap-3">
               <input
+                type="range"
+                min="0"
+                max="3000000"
+                step="10000"
+                value={ekstraPara}
+                onChange={(e) => setEkstraPara(Number(e.target.value))}
+                className="flex-1 h-2 bg-emerald-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <input
                 type="number"
                 value={ekstraPara}
                 onChange={(e) => setEkstraPara(Number(e.target.value))}
-                step="50000"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg font-semibold"
+                step="10000"
+                className="w-32 px-3 py-2 border border-gray-300 rounded-lg text-center font-semibold"
               />
               <span className="text-gray-600 font-semibold">₺</span>
             </div>
