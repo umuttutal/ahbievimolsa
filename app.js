@@ -198,8 +198,9 @@ const EvYatirimAnalizi = () => {
         <ul className="text-gray-700 space-y-1 text-xs">
           <li>• 100.Yıl'daki evin güncel fiyatı {vars.yuzYilDeger2026.toLocaleString('tr-TR')} ₺'dir.</li>
           <li>• Yapracık'taki evin güncel fiyatı {vars.yapracikDeger2026.toLocaleString('tr-TR')} ₺'dir.</li>
-          <li>• Umut'un güncel kirası: {umutKirasi.toLocaleString('tr-TR')} ₺/ay</li>
-          <li>• Yapracık'ın güncel kirası: {yapracikKira2027.toLocaleString('tr-TR')} ₺/ay</li>
+          <li>• Umut'un güncel kirası {umutKirasi.toLocaleString('tr-TR')} ₺/ay'dır.</li>
+          <li>• Yapracık'ın güncel kirası {yapracikKira2027.toLocaleString('tr-TR')} ₺/ay'dır.</li>
+          <li>• Güncel konut kredisi faizleri ortalama %{vars.faiz2026}'dir.</li>
           <li>• Bu değerler sabittir, değiştirmek için arayınız 📞😅.</li>
           <li>• Geriye kalan tüm değerler (artış oranları, ekstra sermaye, fırsat maliyeti vb.) aşağıdan değiştirilebilir ve hesaplamaya dahil edilir.</li>
           <li>• Peşinat olacak ekstra sermayenin (herhangi bir tarihteki fiyatlaması ile) tamamı, yine bu evin satın alımı için kullanılacaktır.</li>
