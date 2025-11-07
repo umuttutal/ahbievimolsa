@@ -182,9 +182,11 @@ const EvYatirimAnalizi = () => {
         <p className="text-gray-600">
           Bu hesap makinesi, Yapracık'taki evin satışının 2026 Ocak (Senaryo 1) veya daha
            ileri bir tarihte yapılmasının (Senaryo 2) toplam maliyet üzerinden karşılaştırılması
-            için yapılmıştır. Hesaplama fark analizi mantığına dayanır. Yapracık satış geliri ve mevcut
-             sermaye her iki senaryoda da kullanılacağı için, karşılaştırmada sadece değişken maliyetler 
-             (kira giderleri ve kredi taksitleri) dikkate alınır. Senaryo 1'de hemen kendi evinizi alırsınız
+            için yapılmıştır. Ev fiyatlarının artış oranları ve eldeki sermaye (+ fırsat maliyeti) birlikte değerlendirilerek
+            ev almak için çekilmesi gereken kredi miktarları hesaplanır. Toplam maliyet analizinde ise, işte bu kredilerin aylık taksitleri,
+             kira giderleri ile toplanır. Fark analizinin doğru yapılabilmesi adına, 
+             eldeki sermayenin tamamının her iki senaryoda da ev alımı için kullanılacağı varsayılmış, yalnızca değişken maliyetler
+              (kira giderleri + kredi taksitleri) dikkate alınmıştır. Senaryo 1'de hemen kendi evinizi alırsınız
               kira ödemezsiniz ama daha yüksek faizle kredi alırsınız; Senaryo 2'de beklerseniz kira ödersiniz
                ama daha düşük faizle kredi alırsınız.
         </p>
