@@ -40,8 +40,9 @@ const EvYatirimAnalizi = () => {
   const senaryo1_krediTutar = vars.yuzYilDeger2026 - vars.yapracikDeger2026 - vars.ekstraPara;
   const senaryo1_aylikTaksit = hesaplaAylikTaksit(senaryo1_krediTutar, vars.faiz2026, vars.vade);
   
-  // Senaryo 2: 2027 Ocak'ta al
-  const ekstraParaBuyumus = vars.ekstraPara * (1 + vars.firsatMaliyet / 100);
+  // Senaryo 2: Seçilen yılda al
+  const yilFarki = senaryo2Yil - 2026; // 2027 için 1, 2028 için 2, vb.
+  const ekstraParaBuyumus = vars.ekstraPara * Math.pow(1 + vars.firsatMaliyet / 100, yilFarki);
   const senaryo2_krediTutar = vars.yuzYilDeger2027 - vars.yapracikDeger2027 - ekstraParaBuyumus;
   const senaryo2_aylikTaksit = hesaplaAylikTaksit(senaryo2_krediTutar, vars.faiz2027, vars.vade);
 
@@ -78,21 +79,21 @@ const EvYatirimAnalizi = () => {
   // Senaryo 2 nakit akışı analizi
   const senaryo2NakitAkisi = [];
   let senaryo2KumulatifMaliyet = 0;
+  const senaryo2BaslangicAy = yilFarki * 12; // Kaç ay sonra alınacak
   
   for (let ay = 0; ay <= vade; ay++) {
     let aylikMaliyet = 0;
     
-    if (ay < 12) {
-      // 2026: Kira öde + Kira al + Fırsat maliyeti kaybı
+    if (ay < senaryo2BaslangicAy) {
+      // 2026'dan senaryo2Yil'a kadar: Kira öde + Kira al + Fırsat maliyeti kaybı
       const netKira = vars.suankiKira - vars.yapracikKira2027;
       const firsatKaybi = (vars.ekstraPara * (vars.firsatMaliyet / 100)) / 12;
       aylikMaliyet = netKira + firsatKaybi;
-    } else if (ay === 12) {
-      // 2027 Ocak: Satış ve alım
-      const ekstraParaBuyumus = vars.ekstraPara * (1 + vars.firsatMaliyet/100);
+    } else if (ay === senaryo2BaslangicAy) {
+      // Seçilen yıl Ocak: Satış ve alım
       aylikMaliyet = vars.yuzYilDeger2027 - vars.yapracikDeger2027 - ekstraParaBuyumus;
     } else {
-      // 2027 sonrası: Sadece taksit
+      // Seçilen yıl sonrası: Sadece taksit
       aylikMaliyet = senaryo2_aylikTaksit;
     }
     
@@ -309,13 +310,13 @@ const EvYatirimAnalizi = () => {
           Aşağıdaki parametreleri değiştirerek kendi senaryonuzu oluşturun. Değerler anlık olarak güncellenecektir.
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Senaryo 2 Yılı */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">
-              Senaryo 2: Hangi Yıl Alınsın?
+        {/* Senaryo 2 Yılı - Öne Çıkarılmış */}
+        <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border-2 border-purple-300">
+          <div className="space-y-3">
+            <label className="block text-lg font-bold text-gray-800">
+              📅 Senaryo 2: Hangi Yıl Alınsın?
             </label>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <input
                 type="range"
                 min="2027"
@@ -323,7 +324,7 @@ const EvYatirimAnalizi = () => {
                 step="1"
                 value={senaryo2Yil}
                 onChange={(e) => setSenaryo2Yil(Number(e.target.value))}
-                className="flex-1 h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                className="flex-1 h-3 bg-purple-300 rounded-lg appearance-none cursor-pointer"
               />
               <input
                 type="number"
@@ -331,14 +332,19 @@ const EvYatirimAnalizi = () => {
                 onChange={(e) => setSenaryo2Yil(Number(e.target.value))}
                 min="2027"
                 max="2030"
-                className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-center font-semibold"
+                className="w-28 px-4 py-3 border-2 border-purple-400 rounded-lg text-center font-bold text-xl"
               />
-              <span className="text-gray-600 font-semibold">Yıl</span>
+              <span className="text-gray-700 font-bold text-lg">Yıl</span>
             </div>
-            <p className="text-xs text-gray-500">
-              Yapracık evi {senaryo2Yil} Ocak'ta satılacak
+            <p className="text-sm text-purple-700 font-medium">
+              Yapracık evi {senaryo2Yil} Ocak'ta satılacak ({yilFarki} yıl sonra)
             </p>
           </div>
+        </div>
+
+        <h4 className="text-lg font-semibold text-gray-700 mb-4 mt-6">Diğer Parametreler</h4>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* 100.Yıl Değer Artış Oranı */}
           <div className="space-y-2">
@@ -527,7 +533,7 @@ const EvYatirimAnalizi = () => {
               <span className="text-gray-600 font-semibold">%</span>
             </div>
             <p className="text-xs text-gray-500">
-              1 yıl sonra: {(ekstraPara * (1 + firsatMaliyet/100)).toLocaleString('tr-TR')} ₺
+              {yilFarki} yıl sonra: {Math.round(ekstraParaBuyumus).toLocaleString('tr-TR')} ₺
             </p>
           </div>
         </div>
