@@ -344,7 +344,7 @@ const EvYatirimAnalizi = () => {
           {/* 100.Yıl Değer Artış Oranı */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              100.Yıl Ev Değer Artış Oranı (2026→{senaryo2Yil})
+              100.Yıl Ev Değer Artış Oranı Beklentisi (2026→{senaryo2Yil})
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -372,7 +372,7 @@ const EvYatirimAnalizi = () => {
           {/* Yapracık Değer Artış Oranı */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Yapracık Ev Değer Artış Oranı (2026→{senaryo2Yil})
+              Yapracık Ev Değer Artış Oranı Beklentisi (2026→{senaryo2Yil})
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -400,7 +400,7 @@ const EvYatirimAnalizi = () => {
           {/* Umut'un Kirası */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Umut'un 2026-{senaryo2Yil} arası ortalama aylık kirası
+              Umut'un 2026-{senaryo2Yil} arası ortalama aylık kira gideri beklentisi
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -426,7 +426,7 @@ const EvYatirimAnalizi = () => {
           {/* Yapracık Kira Geliri */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Yapracık'tan 2026-{senaryo2Yil} arası ortalama aylık kira geliri
+              Yapracık'tan 2026-{senaryo2Yil} arası ortalama aylık kira geliri beklentisi
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -452,7 +452,7 @@ const EvYatirimAnalizi = () => {
           {/* Faiz 2027 */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Kredi Faizi ({senaryo2Yil})
+              {senaryo2Yil} yılına ait konut kredisi faiz beklentisi (%)
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -507,7 +507,7 @@ const EvYatirimAnalizi = () => {
           {/* Ekstra Para */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Ekstra Sermaye
+              Peşinat olabilecek ekstra sermaye (Anlık Değer)
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -533,7 +533,7 @@ const EvYatirimAnalizi = () => {
           {/* Fırsat Maliyeti */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Fırsat Maliyeti (Yıllık Getiri)
+              Peşinatın fırsat maliyeti (Yıllık Getiri %)
             </label>
             <div className="flex items-center gap-3">
               <input
