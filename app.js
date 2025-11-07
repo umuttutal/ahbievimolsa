@@ -168,7 +168,7 @@ const EvYatirimAnalizi = () => {
               <p className="text-xl font-bold">{vars.yapracikDeger2026.toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-green-100 text-sm">Ekstra Sermaye</p>
+              <p className="text-green-100 text-sm">Peşinat olabilecek ekstra sermaye</p>
               <p className="text-xl font-bold">{vars.ekstraPara.toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
@@ -201,11 +201,11 @@ const EvYatirimAnalizi = () => {
               <p className="text-xl font-bold">{Math.round(vars.yapracikDeger2027).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-purple-100 text-sm">Ekstra Sermaye (Başlangıç)</p>
+              <p className="text-purple-100 text-sm">Peşinat olabilecek ekstra sermaye</p>
               <p className="text-lg font-bold">{vars.ekstraPara.toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-purple-100 text-sm">Ekstra Sermaye (Büyümüş)</p>
+              <p className="text-purple-100 text-sm">Peşinat olabilecek ekstra sermaye (Büyümüş)</p>
               <p className="text-lg font-bold">{Math.round(ekstraParaBuyumus).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
