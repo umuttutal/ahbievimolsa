@@ -404,11 +404,20 @@ const EvYatirimAnalizi = () => {
             </label>
             <div className="flex items-center gap-3">
               <input
+                type="range"
+                min="0"
+                max="50000"
+                step="1000"
+                value={umutKirasi}
+                onChange={(e) => setUmutKirasi(Number(e.target.value))}
+                className="flex-1 h-2 bg-orange-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <input
                 type="number"
                 value={umutKirasi}
                 onChange={(e) => setUmutKirasi(Number(e.target.value))}
                 step="1000"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg font-semibold"
+                className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-center font-semibold"
               />
               <span className="text-gray-600 font-semibold">₺/ay</span>
             </div>
@@ -421,11 +430,20 @@ const EvYatirimAnalizi = () => {
             </label>
             <div className="flex items-center gap-3">
               <input
+                type="range"
+                min="0"
+                max="30000"
+                step="1000"
+                value={yapracikKira2027}
+                onChange={(e) => setYapracikKira2027(Number(e.target.value))}
+                className="flex-1 h-2 bg-teal-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <input
                 type="number"
                 value={yapracikKira2027}
                 onChange={(e) => setYapracikKira2027(Number(e.target.value))}
                 step="1000"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg font-semibold"
+                className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-center font-semibold"
               />
               <span className="text-gray-600 font-semibold">₺/ay</span>
             </div>
