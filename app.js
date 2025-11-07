@@ -537,8 +537,7 @@ const EvYatirimAnalizi = () => {
 
         <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
           <p className="text-sm text-gray-700">
-            <strong>💡 İpucu:</strong> Parametreleri değiştirerek farklı piyasa koşullarını test edebilir, 
-            hangi senaryonun sizin için daha uygun olduğunu görebilirsiniz.
+            <strong>💡 İpucu:</strong> Yukarıdaki parametreleri değiştirerek kendi senaryonuzu oluşturun. Değerler anlık olarak güncellenecektir.
           </p>
         </div>
       </div>
