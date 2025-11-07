@@ -8,17 +8,37 @@ const EvYatirimAnalizi = () => {
   const [faiz2027, setFaiz2027] = useState(1.5);
   const [vade, setVade] = useState(60);
   const [ekstraPara, setEkstraPara] = useState(600000);
-  const [firsatMaliyet, setFirsatMaliyet] = useState(45);
-  const [senaryo2Yil, setSenaryo2Yil] = useState(2027);
+  const [aylikFirsatMaliyet, setAylikFirsatMaliyet] = useState(3.12); // Aylık bileşik faiz (≈45% yıllık)
+  const [ayFarki, setAyFarki] = useState(12); // 2026 Ocak = 0, 2026 Şubat = 1, ... 2029 Aralık = 47 (default: 12 = 2027 Ocak)
   const [umutKirasi, setUmutKirasi] = useState(23000);
+  
+  // Ay farkından yıl-ay bilgisi çıkar
+  const getYilAyFromAyFarki = (ay) => {
+    const yil = 2026 + Math.floor(ay / 12);
+    const ayIndex = ay % 12;  // 0 = Ocak, 1 = Şubat, ... 11 = Aralık
+    const ayIsimleri = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+    return { yil, ay: ayIndex + 1, ayIsmi: ayIsimleri[ayIndex] };
+  };
+  
+  const senaryo2Tarih = getYilAyFromAyFarki(ayFarki);
+  const senaryo2Yil = senaryo2Tarih.yil;
+  const senaryo2Ay = senaryo2Tarih.ayIsmi;
+
+  // Aylık bileşik faiz hesaplamaları
+  const aylikYuzYilArtisOrani = (Math.pow(1 + yuzYilArtisOrani / 100, 1/12) - 1) * 100;
+  const aylikYapracikArtisOrani = (Math.pow(1 + yapracikArtisOrani / 100, 1/12) - 1) * 100;
+  
+  // Emlak değerlerini aylık bazda hesapla
+  const yuzYilDeger_Senaryo2 = 4300000 * Math.pow(1 + aylikYuzYilArtisOrani / 100, ayFarki);
+  const yapracikDeger_Senaryo2 = 2700000 * Math.pow(1 + aylikYapracikArtisOrani / 100, ayFarki);
 
   // Sabit parametreler
   const vars = {
     yapracikDeger2026: 2700000,
-    yapracikDeger2027: 2700000 * (1 + yapracikArtisOrani / 100),
+    yapracikDeger2027: yapracikDeger_Senaryo2,
     yapracikKira: 11000,
     yuzYilDeger2026: 4300000,
-    yuzYilDeger2027: 4300000 * (1 + yuzYilArtisOrani / 100),
+    yuzYilDeger2027: yuzYilDeger_Senaryo2,
     suankiKira: umutKirasi,
     kira2027: umutKirasi,
     ekstraPara: ekstraPara,
@@ -26,7 +46,7 @@ const EvYatirimAnalizi = () => {
     faiz2026: 2.7,
     faiz2027: faiz2027,
     vade: vade,
-    firsatMaliyet: firsatMaliyet,
+    firsatMaliyet: aylikFirsatMaliyet,
     yapracikKira2027: yapracikKira2027
   };
 
@@ -40,11 +60,12 @@ const EvYatirimAnalizi = () => {
   const senaryo1_krediTutar = vars.yuzYilDeger2026 - vars.yapracikDeger2026 - vars.ekstraPara;
   const senaryo1_aylikTaksit = hesaplaAylikTaksit(senaryo1_krediTutar, vars.faiz2026, vars.vade);
   
-  // Senaryo 2: Seçilen yılda al
-  const yilFarki = senaryo2Yil - 2026; // 2027 için 1, 2028 için 2, vb.
-  const ekstraParaBuyumus = vars.ekstraPara * Math.pow(1 + vars.firsatMaliyet / 100, yilFarki);
+  // Senaryo 2: Seçilen ay/yılda al
+  const ekstraParaBuyumus = vars.ekstraPara * Math.pow(1 + aylikFirsatMaliyet / 100, ayFarki);
   const senaryo2_krediTutar = vars.yuzYilDeger2027 - vars.yapracikDeger2027 - ekstraParaBuyumus;
-  const senaryo2_aylikTaksit = hesaplaAylikTaksit(senaryo2_krediTutar, vars.faiz2027, vars.vade);
+  // ayFarki=0 olduğunda (2026 Ocak), Senaryo 1 ile aynı faiz oranını kullan
+  const senaryo2Faiz = ayFarki === 0 ? vars.faiz2026 : vars.faiz2027;
+  const senaryo2_aylikTaksit = hesaplaAylikTaksit(senaryo2_krediTutar, senaryo2Faiz, vars.vade);
 
   // Senaryo 1 nakit akışı analizi
   const senaryo1NakitAkisi = [];
@@ -79,7 +100,7 @@ const EvYatirimAnalizi = () => {
   // Senaryo 2 nakit akışı analizi
   const senaryo2NakitAkisi = [];
   let senaryo2KumulatifMaliyet = 0;
-  const senaryo2BaslangicAy = yilFarki * 12; // Kaç ay sonra alınacak
+  const senaryo2BaslangicAy = ayFarki; // Kaç ay sonra alınacak
   
   for (let ay = 0; ay <= vade; ay++) {
     let aylikMaliyet = 0;
@@ -123,10 +144,10 @@ const EvYatirimAnalizi = () => {
   // Toplam maliyet hesapları
   const senaryo1Toplam = 
     (senaryo1_aylikTaksit * vade) + 
-    ((vars.yapracikKira2027 - vars.suankiKira) * yilFarki * 12);
+    ((vars.yapracikKira2027 - vars.suankiKira) * ayFarki);
   
   const senaryo2Toplam = 
-    ((vars.suankiKira - vars.yapracikKira2027) * yilFarki * 12) + 
+    ((vars.suankiKira - vars.yapracikKira2027) * ayFarki) + 
     (senaryo2_aylikTaksit * vade);
 
   // Karşılaştırma grafiği için veri
@@ -139,9 +160,12 @@ const EvYatirimAnalizi = () => {
     senaryo2: senaryo2NakitAkisi[index].kumulatif
   }));
 
-  // Yapracık değer artışı hesapla
+  // Yapracık değer artışı hesapla (yıllık bazda gösterim için)
   const yapracikDegerArtisi = vars.yapracikDeger2027 - vars.yapracikDeger2026;
-  const yapracikArtisYuzdesi = ((yapracikDegerArtisi / vars.yapracikDeger2026) * 100).toFixed(0);
+  const yapracikArtisYuzdesi = ((yapracikDegerArtisi / vars.yapracikDeger2026) * 100).toFixed(1);
+  
+  // Yıllık eşdeğer fırsat maliyeti hesapla (gösterim için)
+  const yillikFirsatMaliyet = ((Math.pow(1 + aylikFirsatMaliyet / 100, 12) - 1) * 100).toFixed(1);
 
   // Vade yılı hesapla
   const vadeYil = vade / 12;
@@ -152,7 +176,7 @@ const EvYatirimAnalizi = () => {
         <h1 className="text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
           Ah Bi Evim Olsa 🏠🤓
         </h1>
-        <p className="text-gray-600">Bu hesap makinesi, yapracıktaki evin satışının şimdi (Senaryo 1) veya daha ileri bir yılda yapılmasının (Senaryo 2) toplam maliyet üzerinden karşılaştırılması için yapılmıştır.</p>
+        <p className="text-gray-600">Bu hesap makinesi, yapracıktaki evin satışının şimdi (Senaryo 1) veya daha ileri bir tarihte yapılmasının (Senaryo 2) toplam maliyet üzerinden karşılaştırılması için yapılmıştır.</p>
       </div>
 
       {/* Özet Kartlar */}
@@ -192,7 +216,7 @@ const EvYatirimAnalizi = () => {
 
         <div className="bg-gradient-to-br from-violet-100 to-purple-200 rounded-xl shadow-lg p-6 text-gray-800">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold">Senaryo 2: {senaryo2Yil} Ocak'ta Al</h3>
+            <h3 className="text-xl font-bold">Senaryo 2: {senaryo2Yil} {senaryo2Ay}'ta Al</h3>
             <span className="text-3xl opacity-80">📅</span>
           </div>
           <div className="space-y-3">
@@ -213,7 +237,7 @@ const EvYatirimAnalizi = () => {
               <p className="text-xl font-bold">{Math.round(senaryo2_krediTutar).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-gray-600 text-sm">Aylık Taksit ({vade} ay, %{faiz2027})</p>
+              <p className="text-gray-600 text-sm">Aylık Taksit ({vade} ay, %{senaryo2Faiz})</p>
               <p className="text-xl font-bold">{Math.round(senaryo2_aylikTaksit).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div className="border-t border-purple-400 pt-3 mt-3">
@@ -238,25 +262,25 @@ const EvYatirimAnalizi = () => {
               <li>• Kredi: {senaryo1_krediTutar.toLocaleString('tr-TR')} ₺ (%2.7 faiz, {vade} ay)</li>
               <li>• Aylık taksit: {Math.round(senaryo1_aylikTaksit).toLocaleString('tr-TR')} ₺</li>
               <li>• Taksit toplamı: {Math.round(senaryo1_aylikTaksit * vade).toLocaleString('tr-TR')} ₺</li>
-              <li>• Kira tasarrufu ({yilFarki} yıl): {((vars.yapracikKira2027 - vars.suankiKira) * yilFarki * 12).toLocaleString('tr-TR')} ₺</li>
+              <li>• Kira tasarrufu ({ayFarki} ay): {((vars.yapracikKira2027 - vars.suankiKira) * ayFarki).toLocaleString('tr-TR')} ₺</li>
               <li>• <strong>Toplam maliyet: {Math.round(senaryo1Toplam).toLocaleString('tr-TR')} ₺</strong></li>
             </ul>
           </div>
 
           <div className="border-l-4 border-purple-500 pl-4">
-            <h4 className="font-bold text-gray-800 mb-2">Senaryo 2: {senaryo2Yil} Ocak'ta Al</h4>
+            <h4 className="font-bold text-gray-800 mb-2">Senaryo 2: {senaryo2Yil} {senaryo2Ay}'ta Al</h4>
             <ul className="text-gray-700 space-y-1 text-sm">
-              <li>• 2026-{senaryo2Yil - 1}: Kirada kal ({umutKirasi.toLocaleString('tr-TR')} ₺/ay) - Toplam {(umutKirasi * (senaryo2Yil - 2026) * 12).toLocaleString('tr-TR')} ₺</li>
-              <li>• 2026-{senaryo2Yil - 1}: Yapracık kirası al ({yapracikKira2027.toLocaleString('tr-TR')} ₺/ay) - Toplam {(yapracikKira2027 * (senaryo2Yil - 2026) * 12).toLocaleString('tr-TR')} ₺</li>
-              <li>• Net kira gideri: {((umutKirasi - yapracikKira2027) * (senaryo2Yil - 2026) * 12).toLocaleString('tr-TR')} ₺</li>
-              <li>• {vars.ekstraPara.toLocaleString('tr-TR')} ₺ değerlendir (%{firsatMaliyet} faiz → {Math.round(ekstraParaBuyumus).toLocaleString('tr-TR')} ₺)</li>
-              <li>• {senaryo2Yil}: Yapracık sat ({vars.yapracikDeger2027.toLocaleString('tr-TR')} ₺, +%{yapracikArtisYuzdesi} artmış)</li>
-              <li>• {senaryo2Yil}: 100.Yıl al ({Math.round(vars.yuzYilDeger2027).toLocaleString('tr-TR')} ₺, +%{yuzYilArtisOrani} artmış)</li>
+              <li>• 2026 Ocak-{senaryo2Yil} {senaryo2Ay}: Kirada kal ({umutKirasi.toLocaleString('tr-TR')} ₺/ay) - Toplam {(umutKirasi * ayFarki).toLocaleString('tr-TR')} ₺</li>
+              <li>• 2026 Ocak-{senaryo2Yil} {senaryo2Ay}: Yapracık kirası al ({yapracikKira2027.toLocaleString('tr-TR')} ₺/ay) - Toplam {(yapracikKira2027 * ayFarki).toLocaleString('tr-TR')} ₺</li>
+              <li>• Net kira gideri: {((umutKirasi - yapracikKira2027) * ayFarki).toLocaleString('tr-TR')} ₺</li>
+              <li>• {vars.ekstraPara.toLocaleString('tr-TR')} ₺ değerlendir (%{aylikFirsatMaliyet} aylık faiz → {Math.round(ekstraParaBuyumus).toLocaleString('tr-TR')} ₺)</li>
+              <li>• {senaryo2Yil} {senaryo2Ay}: Yapracık sat ({Math.round(vars.yapracikDeger2027).toLocaleString('tr-TR')} ₺, +%{yapracikArtisYuzdesi} artmış)</li>
+              <li>• {senaryo2Yil} {senaryo2Ay}: 100.Yıl al ({Math.round(vars.yuzYilDeger2027).toLocaleString('tr-TR')} ₺, +%{yuzYilArtisOrani} artmış)</li>
               <li>• Toplam peşinat: {(Math.round(vars.yapracikDeger2027 + ekstraParaBuyumus)).toLocaleString('tr-TR')} ₺</li>
-              <li>• Kredi: {Math.round(senaryo2_krediTutar).toLocaleString('tr-TR')} ₺ (%{faiz2027} faiz, {vade} ay)</li>
+              <li>• Kredi: {Math.round(senaryo2_krediTutar).toLocaleString('tr-TR')} ₺ (%{senaryo2Faiz} faiz, {vade} ay)</li>
               <li>• Aylık taksit: {Math.round(senaryo2_aylikTaksit).toLocaleString('tr-TR')} ₺</li>
               <li>• Taksit toplamı: {Math.round(senaryo2_aylikTaksit * vade).toLocaleString('tr-TR')} ₺</li>
-              <li>• Kira gideri ({yilFarki} yıl): {((vars.suankiKira - vars.yapracikKira2027) * yilFarki * 12).toLocaleString('tr-TR')} ₺</li>
+              <li>• Kira gideri ({ayFarki} ay): {((vars.suankiKira - vars.yapracikKira2027) * ayFarki).toLocaleString('tr-TR')} ₺</li>
               <li>• <strong>Toplam maliyet: {Math.round(senaryo2Toplam).toLocaleString('tr-TR')} ₺</strong></li>
             </ul>
           </div>
@@ -265,44 +289,46 @@ const EvYatirimAnalizi = () => {
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
           <h4 className="font-bold text-gray-800 mb-2">Varsayımlar:</h4>
           <ul className="text-gray-700 space-y-1 text-sm">
-            <li>• 100.Yıl emlak fiyat artışı: %{yuzYilArtisOrani} (2026→{senaryo2Yil})</li>
-            <li>• Yapracık emlak fiyat artışı: %{yapracikArtisYuzdesi} (2026→{senaryo2Yil})</li>
-            <li>• Fırsat maliyeti: Yıllık %{firsatMaliyet} getiri</li>
-            <li>• Umut'un ortalama kirası: {umutKirasi.toLocaleString('tr-TR')} ₺/ay (2026-{senaryo2Yil})</li>
-            <li>• Yapracık ortalama kira geliri: {yapracikKira2027.toLocaleString('tr-TR')} ₺/ay (2026-{senaryo2Yil})</li>
-            <li>• Peşinat olacak ekstra sermayenin (herhangi bir yıldaki fiyatlaması ile) tamamı, yine bu evin satın alımı için kullanılacaktır</li>
+            <li>• Emlak fiyat artışları kullanıcıdan yıllık olarak alınır, hesaplamalarda aylık bileşik faize dönüştürülür</li>
+            <li>• 100.Yıl emlak fiyat artışı: Yıllık %{yuzYilArtisOrani} → Aylık %{aylikYuzYilArtisOrani.toFixed(2)}</li>
+            <li>• Yapracık emlak fiyat artışı: Yıllık %{yapracikArtisOrani} → Aylık %{aylikYapracikArtisOrani.toFixed(2)}</li>
+            <li>• Fırsat maliyeti: Aylık %{aylikFirsatMaliyet} bileşik getiri (Yıllık eşdeğer: ~%{yillikFirsatMaliyet})</li>
+            <li>• Umut'un ortalama kirası: {umutKirasi.toLocaleString('tr-TR')} ₺/ay (2026 Ocak-{senaryo2Yil} {senaryo2Ay})</li>
+            <li>• Yapracık ortalama kira geliri: {yapracikKira2027.toLocaleString('tr-TR')} ₺/ay (2026 Ocak-{senaryo2Yil} {senaryo2Ay})</li>
+            <li>• Peşinat olacak ekstra sermayenin (herhangi bir tarihteki fiyatlaması ile) tamamı, yine bu evin satın alımı için kullanılacaktır</li>
             <li>• Vergi, masraf ve emlak komisyonları dahil değildir</li>
+            <li>• Tüm hesaplamalar ay bazında yapılır ve hassasiyet maksimize edilir</li>
           </ul>
         </div>
 
         <div className="mt-4 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-500">
           <h4 className="font-bold text-gray-800 mb-2">Toplam Maliyet Hesaplama Mantığı:</h4>
           <div className="text-gray-700 space-y-2 text-sm">
-            <p><strong>Senaryo 1 (2026'da al):</strong></p>
+            <p><strong>Senaryo 1 (2026 Ocak'ta al):</strong></p>
             <p className="ml-4">Toplam Maliyet = (Aylık Taksit × Vade) + Kira Tasarrufu</p>
-            <p className="ml-4 text-xs">Kira Tasarrufu = (Yapracık Kirası - Umut Kirası) × {yilFarki} yıl × 12 ay</p>
-            <p className="ml-4 text-xs italic">= ({yapracikKira2027.toLocaleString('tr-TR')} - {umutKirasi.toLocaleString('tr-TR')}) × {yilFarki * 12} ay = {((vars.yapracikKira2027 - vars.suankiKira) * yilFarki * 12).toLocaleString('tr-TR')} ₺</p>
+            <p className="ml-4 text-xs">Kira Tasarrufu = (Yapracık Kirası - Umut Kirası) × {ayFarki} ay</p>
+            <p className="ml-4 text-xs italic">= ({yapracikKira2027.toLocaleString('tr-TR')} - {umutKirasi.toLocaleString('tr-TR')}) × {ayFarki} ay = {((vars.yapracikKira2027 - vars.suankiKira) * ayFarki).toLocaleString('tr-TR')} ₺</p>
             <p className="ml-4 text-xs text-gray-600">(Negatif değer = tasarruf ediyor, kira ödemiyorsunuz)</p>
             
-            <p className="mt-3"><strong>Senaryo 2 ({senaryo2Yil}'de al):</strong></p>
+            <p className="mt-3"><strong>Senaryo 2 ({senaryo2Yil} {senaryo2Ay}'ta al):</strong></p>
             <p className="ml-4">Toplam Maliyet = Kira Gideri + (Aylık Taksit × Vade)</p>
-            <p className="ml-4 text-xs">Kira Gideri = (Umut Kirası - Yapracık Kirası) × {yilFarki} yıl × 12 ay</p>
-            <p className="ml-4 text-xs italic">= ({umutKirasi.toLocaleString('tr-TR')} - {yapracikKira2027.toLocaleString('tr-TR')}) × {yilFarki * 12} ay = {((vars.suankiKira - vars.yapracikKira2027) * yilFarki * 12).toLocaleString('tr-TR')} ₺</p>
+            <p className="ml-4 text-xs">Kira Gideri = (Umut Kirası - Yapracık Kirası) × {ayFarki} ay</p>
+            <p className="ml-4 text-xs italic">= ({umutKirasi.toLocaleString('tr-TR')} - {yapracikKira2027.toLocaleString('tr-TR')}) × {ayFarki} ay = {((vars.suankiKira - vars.yapracikKira2027) * ayFarki).toLocaleString('tr-TR')} ₺</p>
             
-            <p className="mt-3 text-xs text-gray-600"><strong>Not:</strong> Ekstra sermaye sadece kredi tutarını belirlemek için kullanılır, toplam maliyete direkt dahil değildir.</p>
+            <p className="mt-3 text-xs text-gray-600"><strong>Not:</strong> Ekstra sermaye sadece kredi tutarını belirlemek için kullanılır, toplam maliyete direkt dahil değildir. Tüm hesaplamalar aylık bazda bileşik faiz ile yapılır.</p>
           </div>
         </div>
       </div>
 
       {/* Karar Kartı */}
-      <div className={`rounded-xl shadow-lg p-6 mb-6 ${senaryo1Toplam < senaryo2Toplam ? 'bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-500' : 'bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-500'}`}>
+      <div className={`rounded-xl shadow-lg p-6 mb-6 ${senaryo1Toplam < senaryo2Toplam ? 'bg-gradient-to-br from-yellow-100 to-amber-200 border-2 border-amber-400' : 'bg-gradient-to-br from-violet-100 to-purple-200 border-2 border-purple-400'}`}>
         <div className="flex items-center gap-3 mb-4">
           <span className="text-4xl">{senaryo1Toplam < senaryo2Toplam ? '📈' : '📊'}</span>
           <h3 className="text-2xl font-bold text-gray-800">Öneri</h3>
         </div>
         <p className="text-lg text-gray-700 mb-4">
-          <strong className={senaryo1Toplam < senaryo2Toplam ? 'text-green-700' : 'text-purple-700'}>
-            {senaryo1Toplam < senaryo2Toplam ? 'Senaryo 1: 2026 OCAK\'TA ALIN' : `Senaryo 2: ${senaryo2Yil} OCAK'TA ALIN`}
+          <strong className={senaryo1Toplam < senaryo2Toplam ? 'text-amber-700' : 'text-purple-700'}>
+            {senaryo1Toplam < senaryo2Toplam ? 'Senaryo 1: 2026 OCAK\'TA ALIN' : `Senaryo 2: ${senaryo2Yil} ${senaryo2Ay.toUpperCase()}'TA ALIN`}
           </strong>
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -334,34 +360,28 @@ const EvYatirimAnalizi = () => {
           Kendi Rakamlarınızla Deneyin
         </h3>
         
-        {/* Senaryo 2 Yılı - Öne Çıkarılmış */}
+        {/* Senaryo 2 Tarihi - Öne Çıkarılmış */}
         <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border-2 border-purple-300">
           <div className="space-y-3">
             <label className="block text-lg font-bold text-gray-800">
-              📅 Senaryo 2: Hangi Yıl Alınsın?
+              📅 Senaryo 2: Hangi Tarihte Alınsın?
             </label>
             <div className="flex items-center gap-4">
               <input
                 type="range"
-                min="2027"
-                max="2030"
+                min="0"
+                max="47"
                 step="1"
-                value={senaryo2Yil}
-                onChange={(e) => setSenaryo2Yil(Number(e.target.value))}
+                value={ayFarki}
+                onChange={(e) => setAyFarki(Number(e.target.value))}
                 className="flex-1 h-3 bg-purple-300 rounded-lg appearance-none cursor-pointer"
               />
-              <input
-                type="number"
-                value={senaryo2Yil}
-                onChange={(e) => setSenaryo2Yil(Number(e.target.value))}
-                min="2027"
-                max="2030"
-                className="w-28 px-4 py-3 border-2 border-purple-400 rounded-lg text-center font-bold text-xl"
-              />
-              <span className="text-gray-700 font-bold text-lg">Yıl</span>
+              <div className="w-48 px-4 py-3 border-2 border-purple-400 rounded-lg text-center font-bold text-xl bg-white">
+                {senaryo2Yil} {senaryo2Ay}
+              </div>
             </div>
             <p className="text-sm text-purple-700 font-medium">
-              Yapracık evi {senaryo2Yil} Ocak'ta satılacak ({yilFarki} yıl sonra)
+              Yapracık evi {senaryo2Yil} {senaryo2Ay}'ta satılacak ({ayFarki} ay / {(ayFarki/12).toFixed(1)} yıl sonra)
             </p>
           </div>
         </div>
@@ -371,7 +391,7 @@ const EvYatirimAnalizi = () => {
           {/* 100.Yıl Değer Artış Oranı */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              100.Yıl Ev Değer Artış Oranı Beklentisi (2026→{senaryo2Yil})
+              100.Yıl Ev Değer Artış Oranı Beklentisi (Yıllık) (2026→{senaryo2Yil} {senaryo2Ay})
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -392,14 +412,14 @@ const EvYatirimAnalizi = () => {
               <span className="text-gray-600 font-semibold">%</span>
             </div>
             <p className="text-xs text-gray-500">
-              {senaryo2Yil}'de 100.Yıl evi: {vars.yuzYilDeger2027.toLocaleString('tr-TR')} ₺
+              {senaryo2Yil} {senaryo2Ay} 100.Yıl ev fiyatı: {vars.yuzYilDeger2027.toLocaleString('tr-TR')} ₺
             </p>
           </div>
 
           {/* Yapracık Değer Artış Oranı */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Yapracık Ev Değer Artış Oranı Beklentisi (2026→{senaryo2Yil})
+              Yapracık Ev Değer Artış Oranı Beklentisi (Yıllık) (2026→{senaryo2Yil} {senaryo2Ay})
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -420,14 +440,14 @@ const EvYatirimAnalizi = () => {
               <span className="text-gray-600 font-semibold">%</span>
             </div>
             <p className="text-xs text-gray-500">
-              {senaryo2Yil}'de Yapracık evi: {vars.yapracikDeger2027.toLocaleString('tr-TR')} ₺
+              {senaryo2Yil} {senaryo2Ay} Yapracık ev fiyatı: {vars.yapracikDeger2027.toLocaleString('tr-TR')} ₺
             </p>
           </div>
 
           {/* Umut'un Kirası */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Umut'un 2026-{senaryo2Yil} arası ortalama aylık kira gideri beklentisi
+              Umut'un 2026 Ocak-{senaryo2Yil} {senaryo2Ay} arası ortalama aylık kira gideri beklentisi
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -453,7 +473,7 @@ const EvYatirimAnalizi = () => {
           {/* Yapracık Kira Geliri */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Yapracık'tan 2026-{senaryo2Yil} arası ortalama aylık kira geliri beklentisi
+              Yapracık'tan 2026 Ocak-{senaryo2Yil} {senaryo2Ay} arası ortalama aylık kira geliri beklentisi
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -479,7 +499,7 @@ const EvYatirimAnalizi = () => {
           {/* Faiz 2027 */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              {senaryo2Yil} yılına ait konut kredisi faiz beklentisi (%)
+              {senaryo2Yil} {senaryo2Ay} tarihine ait konut kredisi faiz beklentisi (%)
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -560,29 +580,29 @@ const EvYatirimAnalizi = () => {
           {/* Fırsat Maliyeti */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">
-              Peşinatın fırsat maliyeti (Yıllık Getiri %)
+              Peşinatın fırsat maliyeti (Aylık Getiri %)
             </label>
             <div className="flex items-center gap-3">
               <input
                 type="range"
                 min="0"
-                max="100"
-                step="5"
-                value={firsatMaliyet}
-                onChange={(e) => setFirsatMaliyet(Number(e.target.value))}
+                max="10"
+                step="0.1"
+                value={aylikFirsatMaliyet}
+                onChange={(e) => setAylikFirsatMaliyet(Number(e.target.value))}
                 className="flex-1 h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer"
               />
               <input
                 type="number"
-                value={firsatMaliyet}
-                onChange={(e) => setFirsatMaliyet(Number(e.target.value))}
-                step="5"
+                value={aylikFirsatMaliyet}
+                onChange={(e) => setAylikFirsatMaliyet(Number(e.target.value))}
+                step="0.1"
                 className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-center font-semibold"
               />
               <span className="text-gray-600 font-semibold">%</span>
             </div>
             <p className="text-xs text-gray-500">
-              {yilFarki} yıl sonra: {Math.round(ekstraParaBuyumus).toLocaleString('tr-TR')} ₺
+              Yıllık eşdeğer: ~%{yillikFirsatMaliyet} | {ayFarki} ay sonra: {Math.round(ekstraParaBuyumus).toLocaleString('tr-TR')} ₺
             </p>
           </div>
         </div>

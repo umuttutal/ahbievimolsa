@@ -2,11 +2,11 @@
   "name": "ahbievimolsa",
   "version": "1.0.0",
   "description": "Ev Yatırım Fizibilite Analizi - Investment Feasibility Calculator",
-  "homepage": "https://umuttutal.github.io/ahbievimolsa",
-  "scripts": {
+    "homepage": "https://umuttutal.github.io/ahbievimolsa",
+    "scripts": {
     "deploy": "gh-pages -d ."
   },
   "devDependencies": {
     "gh-pages": "^6.1.0"
+    }
   }
-}
