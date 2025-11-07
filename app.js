@@ -198,8 +198,8 @@ const EvYatirimAnalizi = () => {
           <li>• Yapracık'taki evin güncel fiyatı {vars.yapracikDeger2026.toLocaleString('tr-TR')} ₺'dir.</li>
           <li>• Umut'un güncel kirası: {umutKirasi.toLocaleString('tr-TR')} ₺/ay</li>
           <li>• Yapracık'ın güncel kirası: {yapracikKira2027.toLocaleString('tr-TR')} ₺/ay</li>
-          <li>• Senaryo 1'e ait bu rakamlar sabit değerlerdir, değiştirmek için arayınız 😅.</li>
-          <li>• Senaryo 2'ye ait tüm artış oranları, ekstra sermaye, fırsat maliyeti gibi rakamlar aşağıdan değiştirilebilir.</li>
+          <li>• Bu değerler sabittir, değiştirmek için arayınız 📞😅.</li>
+          <li>• Geriye kalan tüm değerler (artış oranları, ekstra sermaye, fırsat maliyeti vb.) aşağıdan değiştirilebilir ve hesaplamaya dahil edilir.</li>
           <li>• Peşinat olacak ekstra sermayenin (herhangi bir tarihteki fiyatlaması ile) tamamı, yine bu evin satın alımı için kullanılacaktır.</li>
           <li>• Emlak fiyat artışları kullanıcıdan yıllık olarak alınır, hesaplamalarda aylık bileşik faize dönüştürülür.</li>
           <li>• Vergi, masraf ve emlak komisyonları dahil değildir.</li>
@@ -211,7 +211,7 @@ const EvYatirimAnalizi = () => {
         <div className="bg-gradient-to-br from-yellow-100 to-amber-200 rounded-xl shadow-lg p-6 text-gray-800">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold">Senaryo 1: 2026 Ocak'ta Al</h3>
-            <span className="text-3xl opacity-80">📅</span>
+            <span className="text-3xl opacity-80">📌</span>
           </div>
           <div className="space-y-3">
             <div>
@@ -248,7 +248,7 @@ const EvYatirimAnalizi = () => {
         <div className="bg-gradient-to-br from-violet-100 to-purple-200 rounded-xl shadow-lg p-6 text-gray-800">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold">Senaryo 2: {senaryo2Yil} {senaryo2Ay}'ta Al</h3>
-            <span className="text-3xl opacity-80">📅</span>
+            <span className="text-3xl opacity-80">📌</span>
           </div>
           <div className="space-y-3">
             <div>
