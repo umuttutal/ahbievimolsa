@@ -302,13 +302,10 @@ const EvYatirimAnalizi = () => {
 
       {/* Kullanıcı Input Formu */}
       <div className="bg-white rounded-xl shadow-lg p-6">
-        <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
           <span className="text-3xl">💰</span>
           Kendi Rakamlarınızla Deneyin
         </h3>
-        <p className="text-gray-600 mb-6 text-sm">
-          Aşağıdaki parametreleri değiştirerek kendi senaryonuzu oluşturun. Değerler anlık olarak güncellenecektir.
-        </p>
         
         {/* Senaryo 2 Yılı - Öne Çıkarılmış */}
         <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border-2 border-purple-300">
