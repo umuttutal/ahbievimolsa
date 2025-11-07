@@ -243,7 +243,7 @@ const EvYatirimAnalizi = () => {
               <li>• Kredi: {senaryo1_krediTutar.toLocaleString('tr-TR')} ₺ (%2.7 faiz, {vade} ay)</li>
               <li>• Aylık taksit: {Math.round(senaryo1_aylikTaksit).toLocaleString('tr-TR')} ₺</li>
               <li>• Taksit toplamı: {Math.round(senaryo1_aylikTaksit * vade).toLocaleString('tr-TR')} ₺</li>
-              <li>• Kira kazanımı ({yilFarki} yıl): {((vars.yapracikKira2027 - vars.suankiKira) * yilFarki * 12).toLocaleString('tr-TR')} ₺</li>
+              <li>• Kira tasarrufu ({yilFarki} yıl): {((vars.yapracikKira2027 - vars.suankiKira) * yilFarki * 12).toLocaleString('tr-TR')} ₺</li>
               <li>• <strong>Toplam maliyet: {Math.round(senaryo1Toplam).toLocaleString('tr-TR')} ₺</strong></li>
             </ul>
           </div>
@@ -284,10 +284,10 @@ const EvYatirimAnalizi = () => {
           <h4 className="font-bold text-gray-800 mb-2">Toplam Maliyet Hesaplama Mantığı:</h4>
           <div className="text-gray-700 space-y-2 text-sm">
             <p><strong>Senaryo 1 (2026'da al):</strong></p>
-            <p className="ml-4">Toplam Maliyet = (Aylık Taksit × Vade) + Kira Kazanımı</p>
-            <p className="ml-4 text-xs">Kira Kazanımı = (Yapracık Kirası - Umut Kirası) × {yilFarki} yıl × 12 ay</p>
+            <p className="ml-4">Toplam Maliyet = (Aylık Taksit × Vade) + Kira Tasarrufu</p>
+            <p className="ml-4 text-xs">Kira Tasarrufu = (Yapracık Kirası - Umut Kirası) × {yilFarki} yıl × 12 ay</p>
             <p className="ml-4 text-xs italic">= ({yapracikKira2027.toLocaleString('tr-TR')} - {umutKirasi.toLocaleString('tr-TR')}) × {yilFarki * 12} ay = {((vars.yapracikKira2027 - vars.suankiKira) * yilFarki * 12).toLocaleString('tr-TR')} ₺</p>
-            <p className="ml-4 text-xs text-gray-600">(Negatif değer = tasarruf, kira ödemiyorsunuz)</p>
+            <p className="ml-4 text-xs text-gray-600">(Negatif değer = tasarruf ediyor, kira ödemiyorsunuz)</p>
             
             <p className="mt-3"><strong>Senaryo 2 ({senaryo2Yil}'de al):</strong></p>
             <p className="ml-4">Toplam Maliyet = Kira Gideri + (Aylık Taksit × Vade)</p>
