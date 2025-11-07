@@ -158,72 +158,72 @@ const EvYatirimAnalizi = () => {
 
       {/* Özet Kartlar */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
+        <div className="bg-gradient-to-br from-yellow-100 to-amber-200 rounded-xl shadow-lg p-6 text-gray-800">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold">Senaryo 1: 2026 Ocak'ta Al</h3>
             <span className="text-3xl opacity-80">📅</span>
           </div>
           <div className="space-y-3">
             <div>
-              <p className="text-green-100 text-sm">100.Yıl Ev Fiyatı</p>
+              <p className="text-gray-600 text-sm">100.Yıl Ev Fiyatı</p>
               <p className="text-2xl font-bold">{vars.yuzYilDeger2026.toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-green-100 text-sm">Yapracık Satış</p>
+              <p className="text-gray-600 text-sm">Yapracık Satış</p>
               <p className="text-xl font-bold">{vars.yapracikDeger2026.toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-green-100 text-sm">Peşinat olabilecek ekstra sermaye</p>
+              <p className="text-gray-600 text-sm">Peşinat olabilecek ekstra sermaye</p>
               <p className="text-xl font-bold">{vars.ekstraPara.toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-green-100 text-sm">Kredi Tutarı</p>
+              <p className="text-gray-600 text-sm">Kredi Tutarı</p>
               <p className="text-xl font-bold">{senaryo1_krediTutar.toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-green-100 text-sm">Aylık Taksit ({vade} ay, %2.7)</p>
+              <p className="text-gray-600 text-sm">Aylık Taksit ({vade} ay, %2.7)</p>
               <p className="text-xl font-bold">{Math.round(senaryo1_aylikTaksit).toLocaleString('tr-TR')} ₺</p>
             </div>
-            <div className="border-t border-green-400 pt-3 mt-3">
-              <p className="text-green-100 text-sm">{vadeYil.toFixed(0)} Yıllık Toplam Maliyet</p>
-              <p className="text-2xl font-bold">{senaryo1Toplam.toLocaleString('tr-TR')} ₺</p>
+            <div className="border-t border-amber-400 pt-3 mt-3">
+              <p className="text-gray-600 text-sm">{vadeYil.toFixed(0)} Yıllık Toplam Maliyet</p>
+              <p className="text-2xl font-bold">{Math.round(senaryo1Toplam).toLocaleString('tr-TR')} ₺</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+        <div className="bg-gradient-to-br from-violet-100 to-purple-200 rounded-xl shadow-lg p-6 text-gray-800">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold">Senaryo 2: {senaryo2Yil} Ocak'ta Al</h3>
             <span className="text-3xl opacity-80">📅</span>
           </div>
           <div className="space-y-3">
             <div>
-              <p className="text-purple-100 text-sm">100.Yıl Ev Fiyatı (+%30)</p>
+              <p className="text-gray-600 text-sm">100.Yıl Ev Fiyatı (+%30)</p>
               <p className="text-2xl font-bold">{Math.round(vars.yuzYilDeger2027).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-purple-100 text-sm">Yapracık Satış (+%{yapracikArtisYuzdesi})</p>
+              <p className="text-gray-600 text-sm">Yapracık Satış (+%{yapracikArtisYuzdesi})</p>
               <p className="text-xl font-bold">{Math.round(vars.yapracikDeger2027).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-purple-100 text-sm">Peşinat olabilecek ekstra sermaye</p>
+              <p className="text-gray-600 text-sm">Peşinat olabilecek ekstra sermaye</p>
               <p className="text-lg font-bold">{vars.ekstraPara.toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-purple-100 text-sm">Peşinat olabilecek ekstra sermaye (Büyümüş)</p>
+              <p className="text-gray-600 text-sm">Peşinat olabilecek ekstra sermaye (Büyümüş)</p>
               <p className="text-lg font-bold">{Math.round(ekstraParaBuyumus).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-purple-100 text-sm">Kredi Tutarı</p>
+              <p className="text-gray-600 text-sm">Kredi Tutarı</p>
               <p className="text-xl font-bold">{Math.round(senaryo2_krediTutar).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div>
-              <p className="text-purple-100 text-sm">Aylık Taksit ({vade} ay, %{faiz2027})</p>
+              <p className="text-gray-600 text-sm">Aylık Taksit ({vade} ay, %{faiz2027})</p>
               <p className="text-xl font-bold">{Math.round(senaryo2_aylikTaksit).toLocaleString('tr-TR')} ₺</p>
             </div>
             <div className="border-t border-purple-400 pt-3 mt-3">
-              <p className="text-purple-100 text-sm">{vadeYil.toFixed(0)} Yıllık Toplam Maliyet</p>
-              <p className="text-2xl font-bold">{senaryo2Toplam.toLocaleString('tr-TR')} ₺</p>
+              <p className="text-gray-600 text-sm">{vadeYil.toFixed(0)} Yıllık Toplam Maliyet</p>
+              <p className="text-2xl font-bold">{Math.round(senaryo2Toplam).toLocaleString('tr-TR')} ₺</p>
             </div>
           </div>
         </div>
